@@ -398,7 +398,7 @@ NSTimeInterval const kSMCalloutViewRepositionDelayForUIScrollView = 1.0/3.0;
 
     animation.beginTime = CACurrentMediaTime() + delay;
     animation.delegate = self;
-
+    self.layer.zPosition = 999;
     [self.layer addAnimation:animation forKey:@"present"];
 }
 
