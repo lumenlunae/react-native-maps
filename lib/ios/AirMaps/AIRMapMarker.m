@@ -186,7 +186,7 @@ NSInteger _zIndexBeforeOpen = 0;
     }
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handleTap:)];
     // setting this to NO allows the parent MapView to continue receiving marker selection events
-    tapGestureRecognizer.cancelsTouchesInView = NO;
+    tapGestureRecognizer.cancelsTouchesInView = YES;
     [view addGestureRecognizer:tapGestureRecognizer];
 }
 
