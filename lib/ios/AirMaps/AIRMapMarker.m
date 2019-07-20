@@ -145,7 +145,7 @@ NSInteger _zIndexBeforeOpen = 0;
     
     MKAnnotationView *annotationView = [self getAnnotationView];
 
-    [self setSelected:YES animated:NO];
+    [self.map selectAnnotation:self animated:NO];
 
     id event = @{
             @"action": @"marker-select",
@@ -233,7 +233,7 @@ NSInteger _zIndexBeforeOpen = 0;
     // hide the callout view
     [self.map.calloutView dismissCalloutAnimated:YES];
 
-    [self setSelected:NO animated:NO];
+    [self.map deselectAnnotation:self animated:NO];
 
     id event = @{
             @"action": @"marker-deselect",
