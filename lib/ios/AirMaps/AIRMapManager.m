@@ -315,6 +315,22 @@ RCT_EXPORT_METHOD(takeSnapshot:(nonnull NSNumber *)reactTag
     }];
 }
 
+
+RCT_EXPORT_METHOD(deselectMarkers:(nonnull NSNumber *)reactTag)
+{
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+        id view = viewRegistry[reactTag];
+        AIRMap *mapView = (AIRMap *)view;
+        if (![view isKindOfClass:[AIRMap class]]) {
+            RCTLogError(@"Invalid view returned from registry, expecting AIRMap, got: %@", view);
+        } else {
+            for (id annotation in mapView.selectedAnnotations) {
+                [mapView deselectAnnotation:annotation animated:NO];
+            }
+        }
+    }];
+}
+
 #pragma mark Take Snapshot
 - (void)takeMapSnapshot:(AIRMap *)mapView
         snapshotter:(MKMapSnapshotter *) snapshotter
