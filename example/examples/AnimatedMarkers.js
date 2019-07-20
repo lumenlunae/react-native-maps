@@ -8,7 +8,11 @@ import {
   Platform,
 } from 'react-native';
 
-import MapView from 'react-native-maps';
+import MapView, {
+  ProviderPropType,
+  Marker,
+  AnimatedRegion,
+} from 'react-native-maps';
 
 const screen = Dimensions.get('window');
 
@@ -23,7 +27,7 @@ class AnimatedMarkers extends React.Component {
     super(props);
 
     this.state = {
-      coordinate: new MapView.AnimatedRegion({
+      coordinate: new AnimatedRegion({
         latitude: LATITUDE,
         longitude: LONGITUDE,
       }),
@@ -33,8 +37,8 @@ class AnimatedMarkers extends React.Component {
   animate() {
     const { coordinate } = this.state;
     const newCoordinate = {
-      latitude: LATITUDE + ((Math.random() - 0.5) * (LATITUDE_DELTA / 2)),
-      longitude: LONGITUDE + ((Math.random() - 0.5) * (LONGITUDE_DELTA / 2)),
+      latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+      longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
     };
 
     if (Platform.OS === 'android') {
@@ -59,8 +63,10 @@ class AnimatedMarkers extends React.Component {
             longitudeDelta: LONGITUDE_DELTA,
           }}
         >
-          <MapView.Marker.Animated
-            ref={marker => { this.marker = marker; }}
+          <Marker.Animated
+            ref={marker => {
+              this.marker = marker;
+            }}
             coordinate={this.state.coordinate}
           />
         </MapView>
@@ -78,7 +84,7 @@ class AnimatedMarkers extends React.Component {
 }
 
 AnimatedMarkers.propTypes = {
-  provider: MapView.ProviderPropType,
+  provider: ProviderPropType,
 };
 
 const styles = StyleSheet.create({
@@ -114,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = AnimatedMarkers;
+export default AnimatedMarkers;

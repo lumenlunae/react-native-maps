@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import MapView, { MAP_TYPES } from 'react-native-maps';
+import MapView, { MAP_TYPES, ProviderPropType } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 
@@ -44,26 +44,28 @@ class DisplayLatLng extends React.Component {
   }
 
   animateRandomCoordinate() {
-    this.map.animateToCoordinate(this.randomCoordinate());
+    this.map.animateCamera({ center: this.randomCoordinate() });
   }
 
   animateToRandomBearing() {
-    this.map.animateToBearing(this.getRandomFloat(-360, 360));
+    this.map.animateCamera({ heading: this.getRandomFloat(-360, 360) });
   }
 
   animateToRandomViewingAngle() {
-    this.map.animateToViewingAngle(this.getRandomFloat(0, 90));
+    this.map.animateCamera({ pitch: this.getRandomFloat(0, 90) });
   }
 
   getRandomFloat(min, max) {
-    return (Math.random() * (max - min)) + min;
+    return Math.random() * (max - min) + min;
   }
 
   randomCoordinate() {
     const region = this.state.region;
     return {
-      latitude: region.latitude + ((Math.random() - 0.5) * (region.latitudeDelta / 2)),
-      longitude: region.longitude + ((Math.random() - 0.5) * (region.longitudeDelta / 2)),
+      latitude:
+        region.latitude + (Math.random() - 0.5) * (region.latitudeDelta / 2),
+      longitude:
+        region.longitude + (Math.random() - 0.5) * (region.longitudeDelta / 2),
     };
   }
 
@@ -79,14 +81,16 @@ class DisplayLatLng extends React.Component {
       <View style={styles.container}>
         <MapView
           provider={this.props.provider}
-          ref={ref => { this.map = ref; }}
+          ref={ref => {
+            this.map = ref;
+          }}
           mapType={MAP_TYPES.TERRAIN}
           style={styles.map}
           initialRegion={this.state.region}
           onRegionChange={region => this.onRegionChange(region)}
         />
         <View style={[styles.bubble, styles.latlng]}>
-          <Text style={{ textAlign: 'center' }}>
+          <Text style={styles.centeredText}>
             {this.state.region.latitude.toPrecision(7)},
             {this.state.region.longitude.toPrecision(7)}
           </Text>
@@ -129,7 +133,7 @@ class DisplayLatLng extends React.Component {
 }
 
 DisplayLatLng.propTypes = {
-  provider: MapView.ProviderPropType,
+  provider: ProviderPropType,
 };
 
 const styles = StyleSheet.create({
@@ -166,6 +170,7 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
   },
+  centeredText: { textAlign: 'center' },
 });
 
-module.exports = DisplayLatLng;
+export default DisplayLatLng;
