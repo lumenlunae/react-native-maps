@@ -4,6 +4,11 @@ Install the library from npm:
 
 ```sh
 npm install react-native-maps --save-exact
+```
+
+or 
+
+```sh
 yarn add react-native-maps -E
 ```
 
@@ -100,9 +105,6 @@ post_install do |installer|
         config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
       end
     end
-    if target.name == "React"
-      target.remove_from_project
-    end
   end
 end
 ```
@@ -121,6 +123,9 @@ and open the produced workspace file (`.xcworkspace`) in XCode to build your pro
 cd ios
 pod install
 ```
+### App store submission
+
+The app's `Info.plist` file must contain a `NSLocationWhenInUseUsageDescription` with a user-facing purpose string explaining clearly and completely why your app needs the location, otherwise Apple will reject your app submission.
 
 ### Enabling Google Maps on iOS (React Native all versions)
 
@@ -153,23 +158,24 @@ manually](https://developers.google.com/maps/documentation/ios-sdk/start). Then,
 `REPLACE_ME_RELATIVE_PATH_TO_GOOGLE_MAPS_INSTALL` with the relative path
 from your project root to the directory in which you installed the
 Google Maps frameworks. You might need to specify a recursive search path 
-by adding a `/**` at the end of the provided path (e.g. `"./node_modules/react-native-maps/enable-google-maps 'ios/my-frameworks/GoogleMaps/**'"
+by adding a `/**` at the end of the provided path (e.g. "./node_modules/react-native-maps/enable-google-maps 'ios/my-frameworks/GoogleMaps/**'"
 
-    ```json
-    {
-      "name": "your-app",
-      "scripts": {
-        "postinstall": "./node_modules/react-native-maps/enable-google-maps REPLACE_ME_RELATIVE_PATH_TO_GOOGLE_MAPS_INSTALL"
-      }
-    }
-    ```
+```json
+{
+  "name": "your-app",
+  "scripts": {
+    "postinstall": "./node_modules/react-native-maps/enable-google-maps REPLACE_ME_RELATIVE_PATH_TO_GOOGLE_MAPS_INSTALL"
+  }
+}
+```
 
-    Re-run `npm install` or `yarn` to ensure the `postinstall` script is run.
+Re-run `npm install` or `yarn` to ensure the `postinstall` script is run.
 
 c) (React Native 0.60 and higher) Add the following to your Podfile above the `use_native_modules!` function and run `pod install` in the ios folder:
   ```ruby
     # React Native Maps dependencies
-    pod 'react-native-google-maps', path: rn_maps_path
+    rn_maps_path = '../node_modules/react-native-maps'
+    pod 'react-native-google-maps', :path => rn_maps_path
     pod 'GoogleMaps'
     pod 'Google-Maps-iOS-Utils'
   ```
@@ -219,7 +225,7 @@ ext {
     buildToolsVersion   = "xxx"
     minSdkVersion       = xxx
     supportLibVersion   = "xxx"
-    googlePlayServicesVersion = "xxx" // or set latest version
+    playServicesVersion = "xxx" // or set latest version
     androidMapsUtilsVersion = "xxx"
 }
 ```
@@ -232,7 +238,7 @@ buildscript {
         compileSdkVersion = xxx
         targetSdkVersion = xxx
         supportLibVersion = "xxx"
-        googlePlayServicesVersion = "xxx" // or set latest version
+        playServicesVersion = "xxx" // or set latest version
         androidMapsUtilsVersion = "xxx"
     }
 }
@@ -469,7 +475,7 @@ import com.airbnb.android.react.maps.MapsPackage;
 
 ### Trouble with Google Play services
 
-- Make sure that your emulator has Google Play (Go to Anroid studio -> Virtual Devices -> Check that you have icon in "Play Store" column)
+- Make sure that your emulator has Google Play (Go to Android studio -> Virtual Devices -> Check that you have icon in "Play Store" column)
 - Click to bottom dots icon in the emulator
 - Go to Google Play Tab and click Update
 
