@@ -267,7 +267,7 @@ NSInteger const AIR_CALLOUT_OPEN_ZINDEX_BASELINE = 999;
     _calloutIsOpen = NO;
     [self setZIndex:_zIndexBeforeOpen];
     // hide the callout view
-    [self.map.calloutView dismissCalloutAnimated:YES];
+    [self.map.calloutView dismissCalloutAnimated:NO];
 
     [self setSelected:NO animated:NO];
     [self.map deselectAnnotation:self animated:NO];
