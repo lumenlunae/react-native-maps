@@ -112,6 +112,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   private boolean destroyed = false;
   private final ThemedReactContext context;
   private final EventDispatcher eventDispatcher;
+  private FusedLocationSource fusedLocationSource;
 
   private ViewAttacherGroup attacherGroup;
 
@@ -160,6 +161,8 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     super.getMapAsync(this);
 
     final AirMapView view = this;
+
+    fusedLocationSource = new FusedLocationSource(context);
 
     gestureDetector =
         new GestureDetectorCompat(reactContext, new GestureDetector.SimpleOnGestureListener() {
@@ -385,6 +388,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
         if (hasPermissions()) {
           //noinspection MissingPermission
           map.setMyLocationEnabled(showUserLocation);
+          map.setLocationSource(fusedLocationSource);
         }
         synchronized (AirMapView.this) {
           if (!destroyed) {
@@ -513,9 +517,22 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   public void setShowsUserLocation(boolean showUserLocation) {
     this.showUserLocation = showUserLocation; // hold onto this for lifecycle handling
     if (hasPermissions()) {
+      map.setLocationSource(fusedLocationSource);
       //noinspection MissingPermission
       map.setMyLocationEnabled(showUserLocation);
     }
+  }
+
+  public void setUserLocationPriority(int priority){
+    fusedLocationSource.setPriority(priority);
+  }
+
+  public void setUserLocationUpdateInterval(int interval){
+    fusedLocationSource.setInterval(interval);
+  }
+
+  public void setUserLocationFastestInterval(int interval){
+    fusedLocationSource.setFastestInterval(interval);
   }
 
   public void setShowsMyLocationButton(boolean showMyLocationButton) {
@@ -665,9 +682,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
       features.add(index, heatmapView);
       TileOverlay heatmap = (TileOverlay)heatmapView.getFeature();
       heatmapMap.put(heatmap, heatmapView);
-    }  else if (child instanceof AirMapCallout) {
-      return;
-    }else if (child instanceof ViewGroup) {
+    } else if (child instanceof ViewGroup) {
       ViewGroup children = (ViewGroup) child;
       for (int i = 0; i < children.getChildCount(); i++) {
         addFeature(children.getChildAt(i), index);

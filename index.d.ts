@@ -164,6 +164,21 @@ declare module "react-native-maps" {
     position: Point;
   };
 
+  export type IndoorBuilding = {
+    underground: boolean,
+    activeLevelIndex: number,
+    levels: Array<IndoorLevel>,
+  }
+
+  export type IndoorLevel = {
+    index: number,
+    name: string,
+    shortName: string,
+  }
+
+  export interface IndoorBuildingEvent 
+    extends NativeSyntheticEvent<{IndoorBuilding:IndoorBuilding}> {}
+
   /**
    * onKmlReady parameter
    */
@@ -182,6 +197,9 @@ declare module "react-native-maps" {
     provider?: "google" | null;
     customMapStyle?: MapStyleElement[];
     customMapStyleString?: string;
+    userLocationPriority?: "balanced" | "high" | "low" | "passive";
+    userLocationUpdateInterval?: number;
+    userLocationFastestInterval?: number;
     showsUserLocation?: boolean;
     userLocationAnnotationTitle?: string;
     showsMyLocationButton?: boolean;
@@ -241,6 +259,7 @@ declare module "react-native-maps" {
     onMarkerDragStart?: (event: MapEvent) => void;
     onMarkerDrag?: (event: MapEvent) => void;
     onMarkerDragEnd?: (event: MapEvent) => void;
+    onIndoorBuildingFocused?: (event: IndoorBuildingEvent) => void; 
 
     minZoomLevel?: number;
     maxZoomLevel?: number;
@@ -275,6 +294,7 @@ declare module "react-native-maps" {
     takeSnapshot(options?: SnapshotOptions): Promise<string>;
     pointForCoordinate(coordinate: LatLng): Promise<Point>;
     coordinateForPoint(point: Point): Promise<LatLng>;
+    setIndoorActiveLevelIndex(index:number): void;
   }
 
   export class MapViewAnimated extends MapView {}
@@ -515,6 +535,21 @@ declare module "react-native-maps" {
   }
 
   export class Heatmap extends React.Component<MapHeatmapProps, any> {}
+
+  // =======================================================================
+  //  Geojson
+  // =======================================================================
+
+  import GeoJSON from 'geojson';
+
+  export interface GeojsonProps {
+    geojson: GeoJSON.GeoJSON;
+    strokeColor?: string;
+    fillColor?: string;
+    strokeWidth?: number;
+  }
+
+  export class Geojson extends React.Component<GeojsonProps, any> {}
 
   // =======================================================================
   //  Constants
